@@ -37,7 +37,7 @@ diff_drive_controller:
 
     # ── Odometry ──
     odom_frame_id:   odom
-    base_frame_id:   base_link
+    base_frame_id:   base_footprint
     publish_odom_tf: true
 
     # Phương pháp tính odometry từ encoder
