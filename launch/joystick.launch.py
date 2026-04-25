@@ -18,7 +18,6 @@ def generate_launch_description():
             executable='teleop_node',
             name='teleop_twist_joy_node',
             parameters=[joy_params],
-            remappings=[('/cmd_vel','/diff_drive_controller/cmd_vel_unstamped')]
          )
 
     return LaunchDescription([
