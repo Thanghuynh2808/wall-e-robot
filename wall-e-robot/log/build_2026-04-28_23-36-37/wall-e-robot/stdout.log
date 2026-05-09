@@ -1,0 +1,73 @@
+-- The C compiler identification is GNU 11.4.0
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found ament_cmake: 1.3.14 (/opt/ros/humble/share/ament_cmake/cmake)
+-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+-- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)
+-- Added test 'copyright' to check source files copyright and LICENSE
+-- Added test 'cppcheck' to perform static code analysis on C / C++ code
+-- Configured cppcheck include dirs: 
+-- Configured cppcheck exclude dirs and/or files: 
+-- Added test 'cpplint' to check C / C++ code against the Google style
+-- Configured cpplint exclude dirs and/or files: 
+-- Added test 'flake8' to check Python code syntax and style conventions
+-- Added test 'lint_cmake' to check CMake code style
+-- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+-- Added test 'uncrustify' to check C / C++ code style
+-- Configured uncrustify additional arguments: 
+-- Added test 'xmllint' to check XML markup files
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot
+-- Install configuration: ""
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config/ros2_controllers.yaml
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config/gz_bridge.yaml
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config/nav2_params.yaml
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config/nav2.rviz
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config/joystick.yaml
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config/mapper_params_online_async.yaml
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/config/empty.yaml
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/robot_core_v2.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/inertial_macros.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/robot_core.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/gazebo_control.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/lidar.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/camera.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/ros2_control.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/description/robot.urdf.xacro
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/launch
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/launch/joystick.launch.py
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/launch/navigation_launch.launch.py
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/launch/slam.launch.py
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/launch/rsp.launch.py
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/launch/launch_sim.launch.py
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/launch/launch_robot.launch.py
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/worlds
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/worlds/empty.world
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/worlds/office.sdf
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/ament_index/resource_index/package_run_dependencies/wall-e-robot
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/ament_index/resource_index/parent_prefix_path/wall-e-robot
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/environment/ament_prefix_path.sh
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/environment/ament_prefix_path.dsv
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/environment/path.sh
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/environment/path.dsv
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/local_setup.bash
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/local_setup.sh
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/local_setup.zsh
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/local_setup.dsv
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/package.dsv
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/ament_index/resource_index/packages/wall-e-robot
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/cmake/wall-e-robotConfig.cmake
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/cmake/wall-e-robotConfig-version.cmake
+-- Installing: /home/wall-e/Documents/project/wall-e-robot/install/wall-e-robot/share/wall-e-robot/package.xml

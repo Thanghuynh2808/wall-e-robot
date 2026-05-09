@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!--
+        robot_core_v2.xacro
+        Mô hình URDF robot thực tế dựa trên kích thước đo từ ảnh linh kiện:
+          - Bánh xe (wheel.png):         radius=0.033m, width=0.026m
+          - Tấm mica chữ nhật (chassis_mica.png): 200×120×3mm (Deck 1 & Deck 2)
+          - Tấm mica tròn (circle_mica.png):      R=100mm, dày 3mm (Lidar Deck)
+          - RPLidar (lidar.png):         H=55mm, body W=96.8mm (radius=0.048m)
+          - Trụ đồng Deck1→Deck2: 40mm, Deck2→LidarDeck: 30mm
+
+        Hệ tọa độ:
+          - base_footprint : hình chiếu robot xuống mặt đất (z=0)
+          - base_link       : tâm trục 2 bánh chủ động, cao 0.033m (= R_wheel) trên mặt đất
+    -->
+
+    <xacro:include filename="inertial_macros.xacro" />
+
+    <!-- ======================== MATERIALS ======================== -->
+
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+
+    <material name="orange">
+        <color rgba="0.87 0.53 0.13 1"/>
+    </material>
+
+    <material name="blue">
+        <color rgba="0.2 0.2 1 1"/>
+    </material>
+
+    <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="1 0 0 1"/>
+    </material>
+
+    <material name="gray">
+        <color rgba="0.5 0.5 0.5 1"/>
+    </material>
+
+    <!-- ======================== DIMENSIONS (xacro properties) ======================== -->
+
+    <!-- Bánh xe -->
+    <xacro:property name="wheel_radius"  value="0.033" />
+    <xacro:property name="wheel_length"  value="0.026" />
+    <xacro:property name="wheel_mass"    value="0.050" />
+    <!-- Khoảng cách từ tâm robot đến tâm bánh xe theo trục Y (track width/2) -->
+    <!-- chassis rộng 120mm → mép ngoài 60mm, trục motor nhô ra ~15mm → tổng 0.075m -->
+    <xacro:property name="wheel_y_offset" value="0.075" />
+
+    <!-- Tấm mica chữ nhật (Deck 1 = chassis, Deck 2 = deck2) -->
+    <xacro:property name="mica_rect_x"       value="0.213" />
+    <xacro:property name="mica_rect_y"       value="0.152" />
+    <xacro:property name="mica_thickness"    value="0.003" />
+    <xacro:property name="mica_rect_mass"    value="0.200" />
+
+    <!-- Tấm mica tròn (Lidar Deck) -->
+    <xacro:property name="mica_circle_r"     value="0.100" />
+    <xacro:property name="mica_circle_mass"  value="0.100" />
+
+    <!-- Trụ đồng (standoffs) -->
+    <xacro:property name="standoff_deck1_deck2"   value="0.040" />
+    <xacro:property name="standoff_deck2_lidar"   value="0.030" />
+
+    <!-- Caster wheel (bánh con lăn phía trước) -->
+    <!-- R_caster ≈ R_wheel / 2 để chassis nằm ngang: 0.033/2 ≈ 0.015m -->
+    <xacro:property name="caster_radius" value="0.015" />
+    <xacro:property name="caster_mass"   value="0.030" />
+
+    <!-- Vị trí trục bánh chủ động: 70mm từ đuôi chassis
+         → chassis_joint x = -0.070 (chassis link origin tại đuôi chassis) -->
+    <xacro:property name="axle_from_rear" value="0.070" />
+
+    <!-- RPLidar -->
+    <xacro:property name="lidar_radius"  value="0.048" />
+    <xacro:property name="lidar_height"  value="0.055" />
+    <xacro:property name="lidar_mass"    value="0.170" />
+
+    <!-- ======================== BASE FOOTPRINT ======================== -->
+    <!--
+        base_footprint: điểm ảo nằm trên mặt đất, hình chiếu của robot.
+        Dùng làm gốc cho Nav2.
+    -->
+    <link name="base_footprint"/>
+
+    <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <!-- Nâng base_link lên bằng bán kính bánh xe so với mặt đất -->
+        <origin xyz="0 0 ${wheel_radius}" rpy="0 0 0"/>
+    </joint>
+
+    <!-- ======================== BASE LINK ======================== -->
+    <!--
+        base_link: tâm trục bánh chủ động.
+        Link rỗng (không có visual/collision) — dùng làm điểm gốc tham chiếu.
+    -->
+    <link name="base_link"/>
+
+    <!-- ======================== CHASSIS (DECK 1) ======================== -->
+    <!--
+        Tấm mica hình chữ nhật thứ nhất — khung gầm chính.
+        Kích thước: 200×120×3mm.
+        Link origin đặt tại GÓC SAU-TRÁI-DƯỚI của tấm mica (x=0 = đuôi chassis).
+        Visual/collision/inertia center: (mica_rect_x/2, 0, mica_thickness/2).
+    -->
+    <joint name="chassis_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="chassis"/>
+        <!--
+            x = -axle_from_rear: dịch về phía sau để trục bánh nằm đúng vị trí 70mm từ đuôi
+            z = 0: đáy chassis ngang bằng tâm trục bánh (motor shaft ở tâm bánh)
+        -->
+        <origin xyz="${-axle_from_rear} 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="chassis">
+        <visual>
+            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${mica_rect_x} ${mica_rect_y} ${mica_thickness}"/>
+            </geometry>
+            <material name="orange"/>
+        </visual>
+        <collision>
+            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${mica_rect_x} ${mica_rect_y} ${mica_thickness}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${mica_rect_mass}"
+                            x="${mica_rect_x}" y="${mica_rect_y}" z="${mica_thickness}">
+            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <!-- ======================== LEFT WHEEL ======================== -->
+    <!--
+        Bánh chủ động bên trái.
+        Joint dạng continuous (xoay liên tục), trục quay = Z (sau khi rpy xoay -90°).
+    -->
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_wheel"/>
+        <origin xyz="0 ${wheel_y_offset} 0" rpy="${-pi/2} 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1.0" velocity="10.0"/>
+    </joint>
+
+    <link name="left_wheel">
+        <visual>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${wheel_mass}"
+                                 length="${wheel_length}"
+                                 radius="${wheel_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!-- ======================== RIGHT WHEEL ======================== -->
+    <!--
+        Bánh chủ động bên phải.
+        rpy = (+pi/2, 0, 0): xoay ngược chiều để axis z quay đúng hướng tiến.
+    -->
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel"/>
+        <origin xyz="0 ${-wheel_y_offset} 0" rpy="${pi/2} 0 0"/>
+        <axis xyz="0 0 -1"/>
+        <limit effort="1.0" velocity="10.0"/>
+    </joint>
+
+    <link name="right_wheel">
+        <visual>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder length="${wheel_length}" radius="${wheel_radius}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${wheel_mass}"
+                                 length="${wheel_length}"
+                                 radius="${wheel_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!-- ======================== CASTER WHEEL ======================== -->
+    <!--
+        Bánh con lăn (ball caster) phía trước.
+        - Vị trí X: 10mm từ đầu chassis = (mica_rect_x - 0.010) từ chassis origin
+        - Vị trí Z: -(wheel_radius - caster_radius) = -(0.033 - 0.015) = -0.018m
+          → đảm bảo đáy caster tiếp xúc mặt đất khi robot nằm ngang
+        - Friction = 0 để caster trượt tự do trong Gazebo
+    -->
+    <joint name="caster_wheel_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="caster_wheel"/>
+        <origin xyz="${mica_rect_x - 0.010} 0 ${-(wheel_radius - caster_radius)}"
+                rpy="0 0 0"/>
+    </joint>
+
+    <link name="caster_wheel">
+        <visual>
+            <geometry>
+                <sphere radius="${caster_radius}"/>
+            </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <geometry>
+                <sphere radius="${caster_radius}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_sphere mass="${caster_mass}" radius="${caster_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
+    </link>
+
+    <!-- Caster không có ma sát → trượt tự do trong Gazebo -->
+    <gazebo reference="caster_wheel">
+        <mu1 value="0.0"/>
+        <mu2 value="0.0"/>
+    </gazebo>
+
+    <!-- ======================== DECK 2 (MIDDLE LAYER) ======================== -->
+    <!--
+        Tấm mica hình chữ nhật thứ hai — tầng giữa chứa bo mạch điều khiển.
+        Cùng kích thước với Deck 1: 200×120×3mm.
+        Cách Deck 1 một khoảng = mica_thickness + standoff_deck1_deck2 = 3+40 = 43mm.
+        Link origin tại GÓC SAU-TRÁI-DƯỚI (x=0 = đuôi deck2, khớp x=0 của chassis).
+    -->
+    <joint name="deck2_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="deck2"/>
+        <origin xyz="0 0 ${mica_thickness + standoff_deck1_deck2}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="deck2">
+        <visual>
+            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${mica_rect_x} ${mica_rect_y} ${mica_thickness}"/>
+            </geometry>
+            <material name="orange"/>
+        </visual>
+        <collision>
+            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${mica_rect_x} ${mica_rect_y} ${mica_thickness}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="${mica_rect_mass}"
+                            x="${mica_rect_x}" y="${mica_rect_y}" z="${mica_thickness}">
+            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <!-- ======================== LIDAR DECK (TOP CIRCULAR LAYER) ======================== -->
+    <!--
+        Tấm mica hình tròn — tầng trên cùng gắn LiDAR.
+        Đường kính: 200mm (radius=0.100m), dày 3mm.
+        Đặt tại tâm của Deck 2 (x=mica_rect_x/2=0.100m từ đuôi deck2),
+        cách Deck 2 một khoảng = mica_thickness + standoff_deck2_lidar = 3+30 = 33mm.
+        Link origin tại TÂM-ĐÁY của tấm tròn (trục cylinder).
+    -->
+    <joint name="lidar_deck_joint" type="fixed">
+        <parent link="deck2"/>
+        <child link="lidar_deck"/>
+        <origin xyz="${mica_rect_x/2} 0 ${mica_thickness + standoff_deck2_lidar}"
+                rpy="0 0 0"/>
+    </joint>
+
+    <link name="lidar_deck">
+        <visual>
+            <!-- Cylinder origin tại tâm → visual center ở mica_thickness/2 -->
+            <origin xyz="0 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="${mica_circle_r}" length="${mica_thickness}"/>
+            </geometry>
+            <material name="orange"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="${mica_circle_r}" length="${mica_thickness}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${mica_circle_mass}"
+                                 length="${mica_thickness}"
+                                 radius="${mica_circle_r}">
+            <origin xyz="0 0 ${mica_thickness/2}" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!-- ======================== LASER FRAME (RPLidar) ======================== -->
+    <!--
+        Cảm biến LiDAR RPLidar A1 gắn tại tâm tấm mica tròn.
+        Kích thước thực (từ lidar.png): H=55mm, body W=96.8mm → radius≈48mm.
+        Chiều cao tâm laser_frame từ đáy lidar_deck:
+            z = mica_thickness + lidar_height/2 = 0.003 + 0.0275 = 0.0305m ≈ 0.031m
+        Vị trí laser_frame tính từ mặt đất (chiều cao quét):
+            0.033 (base) + 0 (chassis) + 0.043 (deck2) + 0.033 (lidar_deck) + 0.031 = 0.140m
+        NOTE: Tích hợp trực tiếp vào file này để đảm bảo tọa độ chính xác.
+              Khi dùng file này, KHÔNG include lidar.xacro trong robot.urdf.xacro
+              (lidar.xacro dùng parent="chassis" với offset cũ không còn phù hợp).
+    -->
+    <joint name="laser_joint" type="fixed">
+        <parent link="lidar_deck"/>
+        <child link="laser_frame"/>
+        <origin xyz="0 0 ${mica_thickness + lidar_height/2}" rpy="0 0 0"/>
+    </joint>
+
+    <link name="laser_frame">
+        <visual>
+            <geometry>
+                <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
+            </geometry>
+            <material name="gray"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${lidar_radius}" length="${lidar_height}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${lidar_mass}"
+                                 length="${lidar_height}"
+                                 radius="${lidar_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <!-- Gazebo sensor plugin cho LiDAR (gpu_lidar 360°) -->
+    <gazebo reference="laser_frame">
+        <material>Gazebo/DarkGrey</material>
+        <sensor name="laser" type="gpu_lidar">
+            <always_on>1</always_on>
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <min_angle>-3.14159</min_angle>
+                        <max_angle>3.14159</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.15</min>
+                    <max>12.0</max>
+                </range>
+            </lidar>
+            <topic>scan</topic>
+            <gz_frame_id>laser_frame</gz_frame_id>
+        </sensor>
+    </gazebo>
+
+</robot>

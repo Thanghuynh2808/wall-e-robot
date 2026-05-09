@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="enable_sensors" default="false"/>
+
+    <!--
+        gazebo_control.xacro  (updated for ros2_control)
+        
+        Thay thế native DiffDrive + JointStatePublisher plugins bằng
+        gz_ros2_control plugin, cho phép controller_manager quản lý
+        DiffDriveController và JointStateBroadcaster qua ros2_control.
+
+        Plugin Sensors được giữ nguyên để lidar và camera vẫn hoạt động.
+    -->
+
+    <gazebo>
+        <!-- ── gz_ros2_control bridge ── -->
+        <!--
+            Plugin này kết nối Gazebo Sim với ros2_control:
+              - Đọc joint state từ Gazebo và ghi vào state_interfaces
+              - Đọc command_interfaces và apply lên Gazebo joints
+              - Khởi tạo controller_manager với config từ ros2_controllers.yaml
+        -->
+        <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin"
+                filename="gz_ros2_control-system">
+            <parameters>$(find wall-e-robot)/config/ros2_controllers.yaml</parameters>
+            <!-- Tên robot trong Gazebo (phải khớp với tên trong spawn command) -->
+            <ros>
+                <namespace>/</namespace>
+            </ros>
+        </plugin>
+
+        <!-- ── Sensors plugin (lidar + camera) ── -->
+        <xacro:if value="$(arg enable_sensors)">
+            <plugin name="gz::sim::systems::Sensors" filename="gz-sim-sensors-system">
+                <render_engine>ogre</render_engine>
+            </plugin>
+        </xacro:if>
+    </gazebo>
+
+</robot>

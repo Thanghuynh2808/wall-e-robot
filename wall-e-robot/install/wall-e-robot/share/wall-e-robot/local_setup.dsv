@@ -1,0 +1,2 @@
+source;share/wall-e-robot/environment/ament_prefix_path.sh
+source;share/wall-e-robot/environment/path.sh

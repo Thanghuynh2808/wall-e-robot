@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!--
+        ros2_control.xacro
+        Định nghĩa ros2_control hardware interface cho Wall-E robot.
+
+        Sử dụng xacro argument 'sim_mode' để chọn hardware plugin:
+          - sim_mode=true  → gz_ros2_control/GazeboSimSystem  (Gazebo simulation)
+          - sim_mode=false → wall_e_hardware/WallEHardware     (real robot)
+
+        Joints được expose:
+          - left_wheel_joint  : velocity command, position+velocity state
+          - right_wheel_joint : velocity command, position+velocity state
+
+        Cách sử dụng:
+          Simulation : ros2 launch wall-e-robot launch_sim.launch.py  (sim_mode tự động true)
+          Real robot : ros2 launch wall-e-robot rsp.launch.py use_sim_time:=false sim_mode:=false
+    -->
+
+    <xacro:arg name="sim_mode" default="false"/>
+
+    <ros2_control name="WallEBot" type="system">
+
+        <hardware>
+            <xacro:if value="$(arg sim_mode)">
+                <!-- ── SIMULATION: Gazebo Sim System ── -->
+                <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+            </xacro:if>
+            <xacro:unless value="$(arg sim_mode)">
+                <!-- ── REAL HARDWARE: custom plugin ── -->
+                <!--
+                    Thay 'wall_e_hardware/WallEHardware' bằng tên plugin thực tế
+                    khi bạn đã viết ROS2 hardware interface cho motor controller.
+
+                                        Ví dụ các plugin phổ biến:
+                                            - serial_motor_demo_driver/DiffBotSystemHardware  (serial_motor_demo pkg)
+                                            - diffdrive_arduino/DiffDriveArduinoHardware      (diffdrive_arduino pkg)
+                -->
+                                <plugin>diffdrive_arduino/DiffDriveArduinoHardware</plugin>
+                <param name="left_wheel_name">left_wheel_joint</param>
+                <param name="right_wheel_name">right_wheel_joint</param>
+                <param name="loop_rate">50</param>
+                <param name="device">/dev/ttyACM0</param>
+                <param name="baud_rate">115200</param>
+                <param name="timeout_ms">2000</param>
+                <param name="enc_counts_per_rev">6100</param>
+            </xacro:unless>
+        </hardware>
+
+        <!-- ── Left wheel ── -->
+        <joint name="left_wheel_joint">
+            <!-- Velocity command interface: đơn vị rad/s -->
+            <command_interface name="velocity">
+                <param name="min">-10.0</param>
+                <param name="max">10.0</param>
+            </command_interface>
+            <!-- State interfaces: vị trí (rad) và vận tốc (rad/s) -->
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+        <!-- ── Right wheel ── -->
+        <joint name="right_wheel_joint">
+            <command_interface name="velocity">
+                <param name="min">-10.0</param>
+                <param name="max">10.0</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+        </joint>
+
+    </ros2_control>
+
+</robot>
