@@ -28,7 +28,7 @@ def generate_launch_description():
         default_value=PathJoinSubstitution([
             FindPackageShare(package_name),
             'worlds',
-            'empty.world' # Hoặc đổi thành 'office.sdf' làm mặc định nếu bạn muốn
+            'empty.world' 
         ]),
         description='World to load'
     )

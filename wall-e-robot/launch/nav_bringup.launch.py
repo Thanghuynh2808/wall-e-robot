@@ -3,10 +3,10 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, GroupAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
+from launch_ros.actions import Node, SetRemap
 
 
 def generate_launch_description():
@@ -17,47 +17,26 @@ def generate_launch_description():
     map_yaml_file = LaunchConfiguration('map')
     params_file = LaunchConfiguration('params_file')
 
-    # 1. Đường dẫn các file
+    # Lấy đường dẫn các file cần thiết
     nav2_bringup_dir = get_package_share_directory(package_name)
-    nav2_launch_dir = os.path.join(nav2_bringup_dir, 'launch')
+    
+    # Sử dụng file bringup chuẩn của Nav2 để quản lý tập trung toàn bộ các node
+    nav2_main_launch_dir = os.path.join(get_package_share_directory('nav2_bringup'), 'launch')
 
-    # 2. Khai báo các Action
-    # Map Server
-    map_server_node = Node(
-        package='nav2_map_server',
-        executable='map_server',
-        name='map_server',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time},
-                    {'yaml_filename': map_yaml_file}]
-    )
-
-    # AMCL (Định vị)
-    amcl_node = Node(
-        package='nav2_amcl',
-        executable='amcl',
-        name='amcl',
-        output='screen',
-        parameters=[params_file, {'use_sim_time': use_sim_time}]
-    )
-
-    # Navigation (Planner, Controller, v.v.)
-    navigation_nodes = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(os.path.join(nav2_launch_dir, 'navigation_launch.launch.py')),
-        launch_arguments={'use_sim_time': use_sim_time,
-                          'params_file': params_file,
-                          'autostart': 'true'}.items()
-    )
-
-    # Lifecycle Manager để kích hoạt Map Server và AMCL
-    lifecycle_manager_node = Node(
-        package='nav2_lifecycle_manager',
-        executable='lifecycle_manager',
-        name='lifecycle_manager_localization',
-        output='screen',
-        parameters=[{'use_sim_time': use_sim_time},
-                    {'autostart': True},
-                    {'node_names': ['map_server', 'amcl']}]
+    # Bọc toàn bộ vào GroupAction để Remap topic cmd_vel cho tất cả các node navigation
+    bringup_with_remap = GroupAction(
+        actions=[
+            SetRemap(src='/cmd_vel', dst='/diff_drive_controller/cmd_vel_unstamped'),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(os.path.join(nav2_main_launch_dir, 'bringup_launch.py')),
+                launch_arguments={
+                    'map': map_yaml_file,
+                    'use_sim_time': use_sim_time,
+                    'params_file': params_file,
+                    'autostart': 'true'
+                }.items(),
+            )
+        ]
     )
 
     return LaunchDescription([
@@ -76,8 +55,5 @@ def generate_launch_description():
             default_value=os.path.join(nav2_bringup_dir, 'config', 'nav2_params.yaml'),
             description='Full path to the ROS2 parameters file to use'),
 
-        map_server_node,
-        amcl_node,
-        navigation_nodes,
-        lifecycle_manager_node
+        bringup_with_remap
     ])

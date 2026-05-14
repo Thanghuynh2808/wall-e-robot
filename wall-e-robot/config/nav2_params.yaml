@@ -30,7 +30,7 @@ amcl:
     save_pose_rate: 0.5
     sigma_hit: 0.2
     tf_broadcast: true
-    transform_tolerance: 5.0
+    transform_tolerance: 2.0
     update_min_a: 0.2
     update_min_d: 0.25
     z_hit: 0.5
@@ -38,6 +38,16 @@ amcl:
     z_rand: 0.5
     z_short: 0.05
     scan_topic: scan
+    # Tự động đặt vị trí ban đầu khi khởi động
+    # Giúp AMCL broadcast TF map→odom ngay lập tức
+    # (Không cần dùng "2D Pose Estimate" trên RViz2)
+    set_initial_pose: true
+    always_reset_initial_pose: true
+    initial_pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      yaw: 0.0
 
 bt_navigator:
   ros__parameters:
@@ -123,7 +133,7 @@ controller_server:
       max_lookahead_dist: 0.9
       lookahead_time: 1.5
       rotate_to_heading_angular_vel: 1.8
-      transform_tolerance: 5.0
+      transform_tolerance: 1.0
       use_velocity_scaled_lookahead_dist: True
       min_approach_linear_velocity: 0.05
       approach_velocity_scaling_dist: 0.6
@@ -135,7 +145,9 @@ controller_server:
       rotate_to_heading_min_angle: 0.785
       max_angular_accel: 3.2
 
-# local_costmap là node độc lập - cấu trúc FLAT
+# ── CẤU TRÚC FLAT (TOP-LEVEL) - cách Nav2 Humble yêu cầu ──
+# local_costmap là sub-node của controller_server, nhưng được cấu hình
+# ở top-level YAML để Nav2 đọc đúng theo cơ chế sub-namespace.
 local_costmap:
   local_costmap:
     ros__parameters:
@@ -144,17 +156,18 @@ local_costmap:
       global_frame: odom
       robot_base_frame: base_footprint
       use_sim_time: False
+      transform_tolerance: 1.0
       rolling_window: true
       width: 3
       height: 3
       resolution: 0.05
-      robot_radius: 0.22
+      robot_radius: 0.15
       # KHÔNG có static_layer - local costmap chỉ cần obstacle + inflation
       plugins: ["obstacle_layer", "inflation_layer"]
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        cost_scaling_factor: 2.5
+        inflation_radius: 0.15
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -171,6 +184,7 @@ local_costmap:
           obstacle_min_range: 0.0
       always_send_full_costmap: True
 
+# global_costmap là sub-node của planner_server, cũng cần cấu trúc FLAT.
 global_costmap:
   global_costmap:
     ros__parameters:
@@ -179,7 +193,8 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_footprint
       use_sim_time: False
-      robot_radius: 0.22
+      transform_tolerance: 1.0
+      robot_radius: 0.15
       resolution: 0.05
       track_unknown_space: true
       plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
@@ -202,8 +217,8 @@ global_costmap:
         map_subscribe_transient_local: True
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.55
+        cost_scaling_factor: 2.5   # Thấp → Chi phí vùng xanh giảm CHẬM → Planner chọn vùng trắng
+        inflation_radius: 0.40     # Rộng → Planner phải đi xa tường ≥ 40cm
       always_send_full_costmap: True
 
 map_server:
@@ -227,7 +242,7 @@ planner_server:
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
       tolerance: 0.5
-      use_astar: false
+      use_astar: true
       allow_unknown: true
 
 smoother_server:
@@ -258,7 +273,7 @@ behavior_server:
       plugin: "nav2_behaviors/AssistedTeleop"
     global_frame: odom
     robot_base_frame: base_footprint
-    transform_tolerance: 5.0
+    transform_tolerance: 0.5
     use_sim_time: False
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
