@@ -1,0 +1,25 @@
+{
+  "waypoints": [
+    {
+      "label": "A",
+      "x": 1.6660016430136204,
+      "y": 0.2978282109558028,
+      "yaw": 0,
+      "script": "hi hi hello hello"
+    },
+    {
+      "label": "B",
+      "x": 0.6919711004222626,
+      "y": -0.18008343563054252,
+      "yaw": 0,
+      "script": "hello hello im from vietnam"
+    }
+  ],
+  "delay_between": 10.0,
+  "map_resolution": 0.05,
+  "map_origin": [
+    -0.215,
+    -0.827,
+    0.0
+  ]
+}

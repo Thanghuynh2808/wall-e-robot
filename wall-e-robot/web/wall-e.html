@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Tour Editor</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 400px;
+            background-color: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+        }
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(16,185,129,0.1));
+        }
+        .sidebar-header h1 { font-size: 1.5rem; font-weight: 700; background: -webkit-linear-gradient(#3b82f6, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .panel { padding: 20px; border-bottom: 1px solid var(--border); }
+        .panel-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 15px; font-weight: 600; }
+        
+        /* Map Area */
+        .main-content {
+            flex: 1;
+            position: relative;
+            background-color: #000;
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #map-container {
+            position: relative;
+            transform-origin: center;
+        }
+        canvas {
+            cursor: crosshair;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            display: block;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: pixelated;
+        }
+        
+        /* Waypoint Markers on top of Canvas */
+        .waypoint-marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+            border: 2px solid white;
+        }
+        
+        /* Controls & Inputs */
+        input[type="file"] { display: none; }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer;
+            font-size: 0.9rem; font-weight: 600; transition: all 0.2s ease;
+            width: 100%; gap: 8px;
+        }
+        .btn-primary { background-color: var(--primary); color: white; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+        .btn-outline { background-color: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { background-color: var(--surface-hover); }
+        .btn-success { background-color: var(--accent); color: white; box-shadow: 0 4px 12px rgba(16,185,129,0.3); }
+        
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+        .input-group input, .input-group textarea {
+            width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border);
+            background-color: rgba(0,0,0,0.2); color: white; font-family: inherit; font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus, .input-group textarea:focus { outline: none; border-color: var(--primary); }
+        
+        /* Waypoints List */
+        .waypoints-list { flex: 1; overflow-y: auto; padding: 20px; }
+        .waypoint-item {
+            background-color: rgba(255,255,255,0.03); border: 1px solid var(--border);
+            border-radius: 8px; padding: 15px; margin-bottom: 12px; transition: all 0.2s;
+        }
+        .waypoint-item:hover { border-color: var(--primary); }
+        .wp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .wp-badge { background-color: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .wp-coords { font-family: monospace; color: var(--text-muted); font-size: 0.85rem; }
+        .wp-actions button { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.1rem; }
+        
+        /* Glass Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 100;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; width: 400px; padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: translateY(20px); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal { transform: translateY(0); }
+        .modal h2 { margin-bottom: 20px; font-size: 1.25rem; }
+        .modal-footer { display: flex; gap: 10px; margin-top: 20px; }
+        
+        /* Utilities */
+        .flex { display: flex; }
+        .gap-2 { gap: 8px; }
+        .mt-4 { margin-top: 16px; }
+        .text-center { text-align: center; }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Robot Tour Editor</h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 5px;">Tạo kịch bản cho Robot hướng dẫn viên</p>
+        </div>
+        
+        <div class="panel">
+            <div class="panel-title">1. Tải bản đồ</div>
+            <label for="map-upload" class="btn btn-primary">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                Chọn file ảnh Map (.pgm, .png)
+            </label>
+            <input type="file" id="map-upload" accept=".pgm,image/*">
+            
+            <label for="yaml-upload" class="btn btn-outline mt-2" style="font-size: 0.8rem; padding: 6px 12px; border-style: dashed; width: 100%;">
+                📁 Chọn file map.yaml (Tự điền)
+            </label>
+            <input type="file" id="yaml-upload" accept=".yaml,.yml" style="display: none;">
+            
+            <div id="map-info" style="margin-top: 10px; font-size: 0.85rem; color: var(--accent);"></div>
+            
+            <div class="flex gap-2 mt-4">
+                <div class="input-group" style="flex:1; margin-bottom:0;">
+                    <label>Resolution (m/px)</label>
+                    <input type="number" id="map-res" value="0.05" step="0.001">
+                </div>
+            </div>
+            
+            <div class="flex gap-2 mt-2">
+                <div class="input-group" style="flex:1; margin-bottom:0;">
+                    <label>Origin X (m)</label>
+                    <input type="number" id="map-origin-x" value="0.0" step="0.1">
+                </div>
+                <div class="input-group" style="flex:1; margin-bottom:0;">
+                    <label>Origin Y (m)</label>
+                    <input type="number" id="map-origin-y" value="0.0" step="0.1">
+                </div>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">
+                *Nên chọn cả file map.yaml để lấy Resolution và Origin chuẩn từ ROS.
+            </p>
+        </div>
+
+        <div class="panel" style="border-bottom: none; flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+            <div class="panel-title" style="display: flex; justify-content: space-between;">
+                <span>2. Các điểm dừng (Waypoints)</span>
+                <span id="wp-count" style="color: var(--primary);">0</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+                Click vào bản đồ để thêm điểm dừng và nhập nội dung thuyết trình.
+            </p>
+            <div class="waypoints-list" id="waypoints-container" style="padding: 0;">
+                <!-- Waypoints will be generated here -->
+                <div class="text-center" style="color: var(--text-muted); margin-top: 20px; font-style: italic;" id="empty-state">
+                    Chưa có điểm nào. Hãy click lên map.
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" style="border-top: 1px solid var(--border);">
+            <div class="input-group">
+                <label>Địa chỉ IP của Robot (Kèm Port)</label>
+                <input type="text" id="robot-ip" value="http://192.168.1.100:5000" placeholder="VD: http://192.168.1.100:5000">
+            </div>
+            <div class="input-group">
+                <label>Thời gian trễ giữa các điểm (giây)</label>
+                <input type="number" id="tour-delay" value="3.0" step="0.5">
+            </div>
+            <button class="btn btn-success" id="btn-save-robot">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                Lưu kịch bản vào Robot
+            </button>
+            <div class="flex gap-2 mt-4">
+                <button class="btn btn-primary" id="btn-start-tour" style="flex: 1; background-color: var(--primary);">▶ Chạy Tour</button>
+                <button class="btn btn-outline" id="btn-stop-tour" style="flex: 1; border-color: var(--danger); color: var(--danger);">■ Dừng Tour</button>
+            </div>
+            <button class="btn btn-outline mt-4" id="btn-download">
+                Tải file tour_script.json về máy
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Map Area -->
+    <div class="main-content" id="main-content">
+        <div id="map-container">
+            <canvas id="map-canvas"></canvas>
+            <div id="markers-container"></div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Waypoint Modal -->
+    <div class="modal-overlay" id="wp-modal">
+        <div class="modal">
+            <h2 id="modal-title">Thêm Điểm Dừng</h2>
+            <div class="input-group">
+                <label>Tọa độ (x, y)</label>
+                <input type="text" id="wp-coord-display" readonly style="color: var(--text-muted);">
+            </div>
+            <div class="input-group">
+                <label>Hướng quay - Yaw (độ)</label>
+                <input type="number" id="wp-yaw" value="0">
+                <small style="color: var(--text-muted); font-size: 0.75rem;">0°: Đông, 90°: Bắc, 180°: Tây, -90°: Nam</small>
+            </div>
+            <div class="input-group">
+                <label>Nội dung thuyết trình (Script)</label>
+                <textarea id="wp-script" rows="5" placeholder="Ví dụ: Xin chào, đây là khu vực trưng bày tủ lạnh..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="btn-modal-cancel">Hủy</button>
+                <button class="btn btn-primary" id="btn-modal-save">Lưu Điểm Này</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let mapImage = null;
+        let waypoints = [];
+        let currentClickCoords = null; // {px, py, mapX, mapY}
+        let editingIndex = -1;
+
+        // DOM Elements
+        const canvas = document.getElementById('map-canvas');
+        const ctx = canvas.getContext('2d');
+        const mapContainer = document.getElementById('map-container');
+        const markersContainer = document.getElementById('markers-container');
+        const waypointsContainer = document.getElementById('waypoints-container');
+        const emptyState = document.getElementById('empty-state');
+        const modal = document.getElementById('wp-modal');
+        
+        // Settings
+        const resInput = document.getElementById('map-res');
+
+        function fitMapToScreen(imgWidth, imgHeight) {
+            const container = document.getElementById('main-content');
+            const cw = container.clientWidth - 40; // padding
+            const ch = container.clientHeight - 40;
+            
+            const scaleX = cw / imgWidth;
+            const scaleY = ch / imgHeight;
+            
+            // Phóng to tối đa 15x để vừa khít màn hình
+            scale = Math.min(scaleX, scaleY, 15);
+            if (scale < 0.125) scale = 0.125;
+            
+            mapContainer.style.transform = `scale(${scale})`;
+            updateMarkerScales();
+        }
+
+        // Load Map Image
+        document.getElementById('map-upload').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (file.name.toLowerCase().endsWith('.pgm')) {
+                // Parse PGM (P5 Binary)
+                const buffer = await file.arrayBuffer();
+                try {
+                    const view = new Uint8Array(buffer);
+                    let offset = 0;
+                    
+                    function readWord() {
+                        while (offset < view.length && view[offset] <= 32) offset++;
+                        if (offset >= view.length) return null;
+                        if (view[offset] === 35) { // '#' comment
+                            while (offset < view.length && view[offset] !== 10) offset++;
+                            return readWord();
+                        }
+                        const start = offset;
+                        while (offset < view.length && view[offset] > 32) offset++;
+                        return String.fromCharCode.apply(null, view.slice(start, offset));
+                    }
+                    
+                    const magic = readWord();
+                    if (magic !== 'P5') {
+                        alert("Chỉ hỗ trợ file PGM định dạng Binary (P5).");
+                        return;
+                    }
+                    const width = parseInt(readWord(), 10);
+                    const height = parseInt(readWord(), 10);
+                    const maxval = parseInt(readWord(), 10);
+                    
+                    if (view[offset] <= 32) offset++; // skip newline
+                    
+                    const imgData = new ImageData(width, height);
+                    for (let i = 0; i < width * height; i++) {
+                        const val = view[offset + i];
+                        const idx = i * 4;
+                        imgData.data[idx] = val;     // R
+                        imgData.data[idx + 1] = val; // G
+                        imgData.data[idx + 2] = val; // B
+                        imgData.data[idx + 3] = 255; // A
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    mapContainer.style.width = width + 'px';
+                    mapContainer.style.height = height + 'px';
+                    ctx.putImageData(imgData, 0, 0);
+                    
+                    // Convert ImageData to Image object for consistent processing
+                    const tmpCanvas = document.createElement('canvas');
+                    tmpCanvas.width = width;
+                    tmpCanvas.height = height;
+                    tmpCanvas.getContext('2d').putImageData(imgData, 0, 0);
+                    
+                    const img = new Image();
+                    img.onload = () => {
+                        mapImage = img;
+                        document.getElementById('map-info').innerText = `✓ Đã load map PGM: ${width}x${height}px`;
+                        fitMapToScreen(width, height);
+                        renderMarkers();
+                    };
+                    img.src = tmpCanvas.toDataURL();
+                } catch (err) {
+                    alert("Lỗi khi đọc file PGM: " + err);
+                }
+            } else {
+                // Parse chuẩn PNG/JPG
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        mapImage = img;
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        mapContainer.style.width = img.width + 'px';
+                        mapContainer.style.height = img.height + 'px';
+                        ctx.drawImage(img, 0, 0);
+                        
+                        document.getElementById('map-info').innerText = `✓ Đã load ảnh: ${img.width}x${img.height}px`;
+                        fitMapToScreen(img.width, img.height);
+                        renderMarkers();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Update pixel coordinates of waypoints when resolution/origin changes
+        function updateWaypointPixels() {
+            if (!mapImage) return;
+            const resolution = parseFloat(resInput.value) || 0.05;
+            const originX = parseFloat(document.getElementById('map-origin-x').value) || 0.0;
+            const originY = parseFloat(document.getElementById('map-origin-y').value) || 0.0;
+            
+            waypoints.forEach(wp => {
+                wp.px = (wp.x - originX) / resolution;
+                wp.py = mapImage.height - 1 - (wp.y - originY) / resolution;
+            });
+            renderMarkers();
+        }
+
+        // Listeners for resolution & origin changes
+        resInput.addEventListener('input', updateWaypointPixels);
+        document.getElementById('map-origin-x').addEventListener('input', updateWaypointPixels);
+        document.getElementById('map-origin-y').addEventListener('input', updateWaypointPixels);
+
+        // Load Map YAML config
+        document.getElementById('yaml-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const text = event.target.result;
+                
+                // Parse resolution
+                const resMatch = text.match(/resolution:\s*([\d.]+)/i);
+                if (resMatch) {
+                    resInput.value = resMatch[1];
+                }
+                
+                // Parse origin: [-5.12, -4.8, 0.0]
+                const originMatch = text.match(/origin:\s*\[\s*(-?[\d.]+)\s*,\s*(-?[\d.]+)/i);
+                if (originMatch) {
+                    document.getElementById('map-origin-x').value = originMatch[1];
+                    document.getElementById('map-origin-y').value = originMatch[2];
+                }
+                
+                document.getElementById('map-info').innerText = `✓ Đã cấu hình từ YAML: Res=${resMatch ? resMatch[1] : '?'}, Origin=[${originMatch ? originMatch[1] + ', ' + originMatch[2] : '?'}]`;
+                updateWaypointPixels();
+            };
+            reader.readAsText(file);
+        });
+
+        // Click on map
+        canvas.addEventListener('click', function(e) {
+            if (!mapImage) {
+                alert("Vui lòng tải ảnh map lên trước!");
+                return;
+            }
+
+            const rect = canvas.getBoundingClientRect();
+            const px = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const py = (e.clientY - rect.top) * (canvas.height / rect.height);
+            
+            const resolution = parseFloat(resInput.value) || 0.05;
+            const originX = parseFloat(document.getElementById('map-origin-x').value) || 0.0;
+            const originY = parseFloat(document.getElementById('map-origin-y').value) || 0.0;
+            
+            // ROS Origin (0,0) is bottom-left plus the offset (originX, originY)
+            // mx = origin[0] + px * resolution
+            // my = origin[1] + (img_height - 1 - py) * resolution
+            const mapX = originX + px * resolution;
+            const mapY = originY + (mapImage.height - 1 - py) * resolution;
+
+            currentClickCoords = { px, py, mapX, mapY };
+            editingIndex = -1;
+            
+            // Open Modal
+            document.getElementById('modal-title').innerText = "Thêm Điểm Dừng";
+            document.getElementById('wp-coord-display').value = `x: ${mapX.toFixed(3)}, y: ${mapY.toFixed(3)}`;
+            document.getElementById('wp-yaw').value = 0;
+            document.getElementById('wp-script').value = "";
+            modal.classList.add('active');
+            setTimeout(() => document.getElementById('wp-script').focus(), 100);
+        });
+
+        // Modal Actions
+        document.getElementById('btn-modal-cancel').addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        document.getElementById('btn-modal-save').addEventListener('click', () => {
+            const yaw = parseFloat(document.getElementById('wp-yaw').value) || 0;
+            const script = document.getElementById('wp-script').value.trim();
+            
+            if (editingIndex >= 0) {
+                // Edit
+                waypoints[editingIndex].yaw = yaw;
+                waypoints[editingIndex].script = script;
+            } else {
+                // Add new
+                if (!currentClickCoords) return;
+                const label = String.fromCharCode(65 + waypoints.length); // A, B, C...
+                waypoints.push({
+                    label: label,
+                    x: currentClickCoords.mapX,
+                    y: currentClickCoords.mapY,
+                    yaw: yaw,
+                    script: script,
+                    px: currentClickCoords.px,
+                    py: currentClickCoords.py
+                });
+            }
+            
+            modal.classList.remove('active');
+            updateUI();
+        });
+
+        function editWaypoint(index) {
+            editingIndex = index;
+            const wp = waypoints[index];
+            document.getElementById('modal-title').innerText = `Sửa Điểm ${wp.label}`;
+            document.getElementById('wp-coord-display').value = `x: ${wp.x.toFixed(3)}, y: ${wp.y.toFixed(3)}`;
+            document.getElementById('wp-yaw').value = wp.yaw;
+            document.getElementById('wp-script').value = wp.script;
+            modal.classList.add('active');
+        }
+
+        window.deleteWaypoint = function(index) {
+            if(confirm("Bạn có chắc muốn xóa điểm này?")) {
+                waypoints.splice(index, 1);
+                // Relabel
+                waypoints.forEach((wp, i) => wp.label = String.fromCharCode(65 + i));
+                updateUI();
+            }
+        };
+        
+        window.editWaypoint = editWaypoint;
+
+        function updateUI() {
+            document.getElementById('wp-count').innerText = waypoints.length;
+            
+            if (waypoints.length === 0) {
+                emptyState.style.display = 'block';
+                waypointsContainer.innerHTML = '';
+                waypointsContainer.appendChild(emptyState);
+            } else {
+                emptyState.style.display = 'none';
+                waypointsContainer.innerHTML = '';
+                waypoints.forEach((wp, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'waypoint-item';
+                    item.innerHTML = `
+                        <div class="wp-header">
+                            <div class="flex gap-2" style="align-items:center;">
+                                <div class="wp-badge">${wp.label}</div>
+                                <div class="wp-coords">x:${wp.x.toFixed(2)} y:${wp.y.toFixed(2)} yaw:${wp.yaw}°</div>
+                            </div>
+                            <div class="wp-actions">
+                                <button onclick="deleteWaypoint(${index})">×</button>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text); background: rgba(0,0,0,0.2); padding: 8px; border-radius: 4px; cursor: pointer;" onclick="editWaypoint(${index})">
+                            ${wp.script ? wp.script : '<span style="color:var(--text-muted);font-style:italic;">Chưa có nội dung thuyết trình</span>'}
+                        </div>
+                    `;
+                    waypointsContainer.appendChild(item);
+                });
+            }
+            renderMarkers();
+        }
+
+        function renderMarkers() {
+            markersContainer.innerHTML = '';
+            waypoints.forEach(wp => {
+                const marker = document.createElement('div');
+                marker.className = 'waypoint-marker';
+                marker.style.left = `${wp.px}px`;
+                marker.style.top = `${wp.py}px`;
+                marker.innerText = wp.label;
+                markersContainer.appendChild(marker);
+            });
+            updateMarkerScales();
+        }
+
+        function updateMarkerScales() {
+            const invScale = 1 / scale;
+            document.querySelectorAll('.waypoint-marker').forEach(marker => {
+                marker.style.transform = `translate(-50%, -50%) scale(${invScale})`;
+            });
+        }
+
+        // Generate JSON
+        function getTourData() {
+            return {
+                waypoints: waypoints.map(w => ({
+                    label: w.label,
+                    x: w.x, y: w.y, yaw: w.yaw,
+                    script: w.script
+                })),
+                delay_between: parseFloat(document.getElementById('tour-delay').value) || 3.0,
+                map_resolution: parseFloat(resInput.value) || 0.05,
+                map_origin: [
+                    parseFloat(document.getElementById('map-origin-x').value) || 0.0,
+                    parseFloat(document.getElementById('map-origin-y').value) || 0.0,
+                    0.0
+                ]
+            };
+        }
+
+        // Save to Robot via API
+        document.getElementById('btn-save-robot').addEventListener('click', async () => {
+            if (waypoints.length === 0) {
+                alert("Hãy tạo ít nhất 1 điểm dừng!");
+                return;
+            }
+            
+            const btn = document.getElementById('btn-save-robot');
+            const originalText = btn.innerHTML;
+            btn.innerText = "Đang lưu...";
+            
+            const robotIp = document.getElementById('robot-ip').value.trim();
+            try {
+                const res = await fetch(`${robotIp}/api/upload_tour`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(getTourData())
+                });
+                const data = await res.json();
+                if (data.status === 'ok') {
+                    alert(`Đã lưu thành công ${data.waypoints} điểm dừng lên Robot!`);
+                } else {
+                    alert("Lưu thất bại: " + JSON.stringify(data));
+                }
+            } catch (err) {
+                console.error(err);
+                alert(`Lỗi kết nối. Vui lòng kiểm tra:\n1. Server.py trên board đã chạy chưa?\n2. IP ${robotIp} có đúng không?\n3. PC và Board có chung mạng WiFi không?`);
+            } finally {
+                btn.innerHTML = originalText;
+            }
+        });
+
+        // Start Tour
+        document.getElementById('btn-start-tour').addEventListener('click', async () => {
+            const robotIp = document.getElementById('robot-ip').value.trim();
+            try {
+                const res = await fetch(`${robotIp}/api/start_tour`, { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'started') {
+                    alert("▶ Đã kích hoạt Tour! Robot đang bắt đầu di chuyển.");
+                } else if (data.status === 'already_running') {
+                    alert("Robot đang chạy tour rồi!");
+                } else {
+                    alert("Lỗi: " + JSON.stringify(data));
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Không thể kết nối đến robot để chạy tour.");
+            }
+        });
+
+        // Stop Tour
+        document.getElementById('btn-stop-tour').addEventListener('click', async () => {
+            const robotIp = document.getElementById('robot-ip').value.trim();
+            try {
+                const res = await fetch(`${robotIp}/api/stop_tour`, { method: 'POST' });
+                const data = await res.json();
+                if (data.status === 'stopped') {
+                    alert("■ Đã dừng tour thành công! Robot sẽ dừng lại.");
+                } else if (data.status === 'not_running') {
+                    alert("Robot hiện không chạy tour nào.");
+                } else {
+                    alert("Lỗi: " + JSON.stringify(data));
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Không thể kết nối đến robot để dừng tour.");
+            }
+        });
+
+        // Download JSON
+        document.getElementById('btn-download').addEventListener('click', () => {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(getTourData(), null, 2));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", "tour_script.json");
+            dlAnchorElem.click();
+        });
+
+        // Zoom support via mousewheel
+        let scale = 1;
+        document.getElementById('map-container').addEventListener('wheel', function(e) {
+            e.preventDefault();
+            scale += e.deltaY * -0.001;
+            scale = Math.min(Math.max(0.125, scale), 15);
+            mapContainer.style.transform = `scale(${scale})`;
+            updateMarkerScales();
+        });
+
+        // Fetch existing tour on load
+        window.onload = async () => {
+            // Không tự động fetch nữa vì chưa biết IP robot
+            // Người dùng có thể tự nhập IP rồi có nút Fetch nếu muốn, 
+            // Tạm thời bỏ tự động fetch khi load trang tĩnh.
+        };
+
+        const observer = new MutationObserver(() => {
+            if (mapImage && waypoints.length > 0 && waypoints[0].px === 0) {
+                updateWaypointPixels();
+            }
+        });
+        observer.observe(document.getElementById('map-info'), { childList: true });
+
+    </script>
+</body>
+</html>
