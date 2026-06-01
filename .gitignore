@@ -1,0 +1,104 @@
+# ==============================================================================
+# ROS 2 & Colcon Build Artifacts
+# ==============================================================================
+build/
+install/
+log/
+wall-e-robot/build/
+wall-e-robot/install/
+wall-e-robot/log/
+**/build/
+**/install/
+**/log/
+.colcon/
+colcon_*.log
+
+# ==============================================================================
+# Python Cache, Virtual Environments, and Bytecode
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+livekit/.venv/
+scripts/__pycache__/
+
+# ==============================================================================
+# Environment Variables & Secrets (NEVER push these)
+# ==============================================================================
+.env
+.env.*
+!.env.example
+*.local
+scripts/.env
+livekit/.env
+wall-e-robot/scripts/.env
+
+# ==============================================================================
+# Editor and IDE Configurations
+# ==============================================================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+.project
+.pydevproject
+.settings/
+
+# ==============================================================================
+# OS Metadata
+# ==============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==============================================================================
+# C/C++ Build Artifacts (if CMake is run manually)
+# ==============================================================================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.o
+*.a
+*.la
+*.lo
+*.out
+*.gch
+
+# ==============================================================================
+# ROS-specific / Debug visualizer outputs
+# ==============================================================================
+frames_*.gv
+frames_*.pdf

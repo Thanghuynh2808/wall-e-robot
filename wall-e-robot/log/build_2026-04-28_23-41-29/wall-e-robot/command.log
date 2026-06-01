@@ -1,4 +1,0 @@
-Invoking command in '/home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot -- -j8 -l8
-Invoked command in '/home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot -- -j8 -l8
-Invoking command in '/home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot
-Invoked command in '/home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/wall-e/Documents/project/wall-e-robot/build/wall-e-robot
