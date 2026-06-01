@@ -142,6 +142,7 @@ class RobotBridgeNode(Node):
 
     async def navigate_to(
         self,
+        command_id: str,
         poi_id: int,
         goal_x: float,
         goal_y: float,
@@ -202,6 +203,7 @@ class RobotBridgeNode(Node):
             # Gửi feedback với pose hiện tại
             await ws_queue.put({
                 "type": "navigation_feedback",
+                "command_id": command_id,
                 "poi_id": poi_id,
                 "x": _pose["x"],
                 "y": _pose["y"],
@@ -404,6 +406,9 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
 
     _current_nav_task: asyncio.Task | None = None
 
+    active_runtime_mode = "idle"
+    localization_status = "unknown"
+
     async def _heartbeat():
         while True:
             await send_queue.put({
@@ -413,13 +418,17 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
                 "theta": _pose["theta"],
                 "nav_status": _nav_status,
                 "voice_status": _voice_status,
+                "runtime_mode": "touring" if _nav_status == "navigating" else active_runtime_mode,
+                "localization_status": localization_status,
             })
             await asyncio.sleep(2.0)
 
     async def _handle_navigate(ws, msg: dict):
         nonlocal _current_nav_task
+        nonlocal active_runtime_mode
         global _nav_status
 
+        command_id = msg.get("command_id", "")
         poi_id    = msg["poi_id"]
         goal_x    = float(msg["x"])
         goal_y    = float(msg["y"])
@@ -436,12 +445,15 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
         _stop_event.clear()
 
         async def _do_nav():
+            nonlocal active_runtime_mode
             global _nav_status
-            success = await node.navigate_to(poi_id, goal_x, goal_y, goal_theta, send_queue)
+            active_runtime_mode = "touring"
+            success = await node.navigate_to(command_id, poi_id, goal_x, goal_y, goal_theta, send_queue)
 
             # Gửi kết quả navigation về backend
             await send_queue.put({
                 "type": "navigation_result",
+                "command_id": command_id,
                 "poi_id": poi_id,
                 "success": success,
                 "message": "Goal reached" if success else "Navigation failed",
@@ -451,11 +463,13 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
             if _nav_status not in ("idle",):
                 await asyncio.sleep(1.5)
                 _nav_status = "idle"
+            active_runtime_mode = "idle"
 
         _current_nav_task = asyncio.create_task(_do_nav())
 
-    async def _handle_stop():
+    async def _handle_stop(msg: dict):
         nonlocal _current_nav_task
+        nonlocal active_runtime_mode
         global _nav_status
         logger.info("[Bridge] STOP command received")
         _stop_event.set()
@@ -463,6 +477,14 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
             _current_nav_task.cancel()
         node.cancel_current_goal()
         _nav_status = "idle"
+        active_runtime_mode = "idle"
+        await send_queue.put({
+            "type": "command_result",
+            "command_id": msg.get("command_id", ""),
+            "command_type": "stop",
+            "success": True,
+            "message": "Navigation stopped",
+        })
         _stop_event.clear()
 
     # ── WebSocket connect + loop ──────────────────────────────────────────────
@@ -506,7 +528,7 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
                             await _handle_navigate(ws, msg)
 
                         elif msg_type == "stop":
-                            await _handle_stop()
+                            await _handle_stop(msg)
 
                         elif msg_type == "speak":
                             # Speech Controller sẽ phát audio qua LiveKit.
