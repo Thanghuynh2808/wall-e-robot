@@ -27,7 +27,7 @@ diff_drive_controller:
     right_wheel_names: ["right_wheel_joint"]
 
     # ── Geometry ──
-    wheel_separation:  0.150   # m  (khoảng cách tâm-tâm hai bánh)
+    wheel_separation:  0.210   # m  (khoảng cách tâm-tâm hai bánh)
     wheel_radius:      0.033   # m
 
     # Hệ số hiệu chỉnh nếu bánh thực tế lăn không đúng lý thuyết (1.0 = không hiệu chỉnh)

@@ -45,37 +45,28 @@
 
     <!-- ======================== DIMENSIONS (xacro properties) ======================== -->
 
-    <!-- Bánh xe -->
+    <!-- Bánh xe chính -->
     <xacro:property name="wheel_radius"  value="0.033" />
     <xacro:property name="wheel_length"  value="0.026" />
     <xacro:property name="wheel_mass"    value="0.050" />
     <!-- Khoảng cách từ tâm robot đến tâm bánh xe theo trục Y (track width/2) -->
-    <!-- chassis rộng 120mm → mép ngoài 60mm, trục motor nhô ra ~15mm → tổng 0.075m -->
-    <xacro:property name="wheel_y_offset" value="0.075" />
+    <!-- chassis rộng 180mm (0.18m) → mép ngoài 90mm, trục motor nhô ra ~15mm → tổng 0.105m -->
+    <xacro:property name="wheel_y_offset" value="0.105" />
 
-    <!-- Tấm mica chữ nhật (Deck 1 = chassis, Deck 2 = deck2) -->
-    <xacro:property name="mica_rect_x"       value="0.213" />
-    <xacro:property name="mica_rect_y"       value="0.152" />
-    <xacro:property name="deck2_x"           value="0.256" /> <!-- Chiều dài tấm giữa (có thể tăng/giảm) -->
-    <xacro:property name="mica_thickness"    value="0.003" />
-    <xacro:property name="mica_rect_mass"    value="0.200" />
+    <!-- Chassis (Thân robot chính hình hộp chữ nhật bo góc như hình mẫu: 250x180x85mm) -->
+    <xacro:property name="mica_rect_x"       value="0.250" /> <!-- Chiều dài: 25cm -->
+    <xacro:property name="mica_rect_y"       value="0.180" /> <!-- Chiều rộng: 18cm -->
+    <xacro:property name="chassis_height"    value="0.085" /> <!-- Chiều cao: 8.5cm -->
+    <xacro:property name="chassis_mass"      value="0.800" /> <!-- Khối lượng thân xe -->
 
-    <!-- Tấm mica tròn (Lidar Deck) -->giữa
-    <xacro:property name="mica_circle_r"     value="0.100" />
-    <xacro:property name="mica_circle_mass"  value="0.100" />
-
-    <!-- Trụ đồng (standoffs) -->
-    <xacro:property name="standoff_deck1_deck2"   value="0.040" />
-    <xacro:property name="standoff_deck2_lidar"   value="0.030" />
-
-    <!-- Caster wheel (bánh con lăn phía trước) -->
-    <!-- R_caster ≈ R_wheel / 2 để chassis nằm ngang: 0.033/2 ≈ 0.015m -->
+    <!-- Bánh phụ con lăn (caster wheels) trước và sau -->
     <xacro:property name="caster_radius" value="0.015" />
     <xacro:property name="caster_mass"   value="0.030" />
 
-    <!-- Vị trí trục bánh chủ động: 70mm từ đuôi chassis
-         → chassis_joint x = -0.070 (chassis link origin tại đuôi chassis) -->
-    <xacro:property name="axle_from_rear" value="0.070" />
+    <!-- Vị trí trục bánh chủ động: nằm chính giữa chassis
+         → 25cm / 2 = 12.5cm từ đuôi chassis
+         → chassis_joint x = -0.125 (chassis link origin tại đuôi chassis) -->
+    <xacro:property name="axle_from_rear" value="0.125" />
 
     <!-- RPLidar -->
     <xacro:property name="lidar_radius"  value="0.048" />
@@ -103,18 +94,17 @@
     -->
     <link name="base_link"/>
 
-    <!-- ======================== CHASSIS (DECK 1) ======================== -->
+    <!-- ======================== CHASSIS ======================== -->
     <!--
-        Tấm mica hình chữ nhật thứ nhất — khung gầm chính.
-        Kích thước: 200×120×3mm.
-        Link origin đặt tại GÓC SAU-TRÁI-DƯỚI của tấm mica (x=0 = đuôi chassis).
-        Visual/collision/inertia center: (mica_rect_x/2, 0, mica_thickness/2).
+        Thân xe hình hộp chữ nhật màu trắng đại diện cho khuôn vỏ hộp 250x180x85mm.
+        Link origin đặt tại GÓC SAU-TRÁI-DƯỚI của hộp (x=0 = đuôi chassis).
+        Visual/collision/inertia center: (mica_rect_x/2, 0, chassis_height/2).
     -->
     <joint name="chassis_joint" type="fixed">
         <parent link="base_link"/>
         <child link="chassis"/>
         <!--
-            x = -axle_from_rear: dịch về phía sau để trục bánh nằm đúng vị trí 70mm từ đuôi
+            x = -axle_from_rear: dịch về phía sau để trục bánh nằm ở chính giữa thân xe
             z = 0: đáy chassis ngang bằng tâm trục bánh (motor shaft ở tâm bánh)
         -->
         <origin xyz="${-axle_from_rear} 0 0" rpy="0 0 0"/>
@@ -122,21 +112,21 @@
 
     <link name="chassis">
         <visual>
-            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <origin xyz="${mica_rect_x/2} 0 ${chassis_height/2}" rpy="0 0 0"/>
             <geometry>
-                <box size="${mica_rect_x} ${mica_rect_y} ${mica_thickness}"/>
+                <box size="${mica_rect_x} ${mica_rect_y} ${chassis_height}"/>
             </geometry>
-            <material name="orange"/>
+            <material name="blue"/>
         </visual>
         <collision>
-            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+            <origin xyz="${mica_rect_x/2} 0 ${chassis_height/2}" rpy="0 0 0"/>
             <geometry>
-                <box size="${mica_rect_x} ${mica_rect_y} ${mica_thickness}"/>
+                <box size="${mica_rect_x} ${mica_rect_y} ${chassis_height}"/>
             </geometry>
         </collision>
-        <xacro:inertial_box mass="${mica_rect_mass}"
-                            x="${mica_rect_x}" y="${mica_rect_y}" z="${mica_thickness}">
-            <origin xyz="${mica_rect_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
+        <xacro:inertial_box mass="${chassis_mass}"
+                            x="${mica_rect_x}" y="${mica_rect_y}" z="${chassis_height}">
+            <origin xyz="${mica_rect_x/2} 0 ${chassis_height/2}" rpy="0 0 0"/>
         </xacro:inertial_box>
     </link>
 
@@ -204,27 +194,28 @@
         </xacro:inertial_cylinder>
     </link>
 
-    <!-- ======================== CASTER WHEEL ======================== -->
+    <!-- ======================== CASTER WHEELS (FRONT & REAR) ======================== -->
     <!--
-        Bánh con lăn (ball caster) phía trước.
-        - Vị trí X: 10mm từ đầu chassis = (mica_rect_x - 0.010) từ chassis origin
-        - Vị trí Z: -(wheel_radius - caster_radius) = -(0.033 - 0.015) = -0.018m
-          → đảm bảo đáy caster tiếp xúc mặt đất khi robot nằm ngang
-        - Friction = 0 để caster trượt tự do trong Gazebo
+        Hai bánh phụ con lăn (ball caster) màu trắng đặt ở phía trước và sau.
+        - Front caster: cách mép trước 20mm
+        - Rear caster: cách mép sau 20mm
+        - Vị trí Z: -(wheel_radius - caster_radius)
     -->
-    <joint name="caster_wheel_joint" type="fixed">
+    
+    <!-- ── Bánh phụ trước ── -->
+    <joint name="front_caster_wheel_joint" type="fixed">
         <parent link="chassis"/>
-        <child link="caster_wheel"/>
-        <origin xyz="${mica_rect_x - 0.010} 0 ${-(wheel_radius - caster_radius)}"
+        <child link="front_caster_wheel"/>
+        <origin xyz="${mica_rect_x - 0.020} 0 ${-(wheel_radius - caster_radius)}"
                 rpy="0 0 0"/>
     </joint>
 
-    <link name="caster_wheel">
+    <link name="front_caster_wheel">
         <visual>
             <geometry>
                 <sphere radius="${caster_radius}"/>
             </geometry>
-            <material name="black"/>
+            <material name="white"/>
         </visual>
         <collision>
             <geometry>
@@ -236,98 +227,53 @@
         </xacro:inertial_sphere>
     </link>
 
-    <!-- Caster không có ma sát → trượt tự do trong Gazebo -->
-    <gazebo reference="caster_wheel">
+    <gazebo reference="front_caster_wheel">
         <mu1 value="0.0"/>
         <mu2 value="0.0"/>
+        <material>Gazebo/White</material>
     </gazebo>
 
-    <!-- ======================== DECK 2 (MIDDLE LAYER) ======================== -->
-    <!--
-        Tấm mica hình chữ nhật thứ hai — tầng giữa chứa bo mạch điều khiển.
-        Cùng kích thước với Deck 1: 200×120×3mm.
-        Cách Deck 1 một khoảng = mica_thickness + standoff_deck1_deck2 = 3+40 = 43mm.
-        Link origin tại GÓC SAU-TRÁI-DƯỚI (x=0 = đuôi deck2, khớp x=0 của chassis).
-    -->
-    <joint name="deck2_joint" type="fixed">
+    <!-- ── Bánh phụ sau ── -->
+    <joint name="rear_caster_wheel_joint" type="fixed">
         <parent link="chassis"/>
-        <child link="deck2"/>
-        <origin xyz="0 0 ${mica_thickness + standoff_deck1_deck2}" rpy="0 0 0"/>
-    </joint>
-
-    <link name="deck2">
-        <visual>
-            <origin xyz="${deck2_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
-            <geometry>
-                <box size="${deck2_x} ${mica_rect_y} ${mica_thickness}"/>
-            </geometry>
-            <material name="orange"/>
-        </visual>
-        <collision>
-            <origin xyz="${deck2_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
-            <geometry>
-                <box size="${deck2_x} ${mica_rect_y} ${mica_thickness}"/>
-            </geometry>
-        </collision>
-        <xacro:inertial_box mass="${mica_rect_mass}"
-                            x="${deck2_x}" y="${mica_rect_y}" z="${mica_thickness}">
-            <origin xyz="${deck2_x/2} 0 ${mica_thickness/2}" rpy="0 0 0"/>
-        </xacro:inertial_box>
-    </link>
-
-    <!-- ======================== LIDAR DECK (TOP CIRCULAR LAYER) ======================== -->
-    <!--
-        Tấm mica hình tròn — tầng trên cùng gắn LiDAR.
-        Đường kính: 200mm (radius=0.100m), dày 3mm.
-        Đặt tại tâm của Deck 2 (x=mica_rect_x/2=0.100m từ đuôi deck2),
-        cách Deck 2 một khoảng = mica_thickness + standoff_deck2_lidar = 3+30 = 33mm.
-        Link origin tại TÂM-ĐÁY của tấm tròn (trục cylinder).
-    -->
-    <joint name="lidar_deck_joint" type="fixed">
-        <parent link="deck2"/>
-        <child link="lidar_deck"/>
-        <origin xyz="${mica_rect_x/2} 0 ${mica_thickness + standoff_deck2_lidar}"
+        <child link="rear_caster_wheel"/>
+        <origin xyz="0.020 0 ${-(wheel_radius - caster_radius)}"
                 rpy="0 0 0"/>
     </joint>
 
-    <link name="lidar_deck">
+    <link name="rear_caster_wheel">
         <visual>
-            <!-- Cylinder origin tại tâm → visual center ở mica_thickness/2 -->
-            <origin xyz="0 0 ${mica_thickness/2}" rpy="0 0 0"/>
             <geometry>
-                <cylinder radius="${mica_circle_r}" length="${mica_thickness}"/>
+                <sphere radius="${caster_radius}"/>
             </geometry>
-            <material name="orange"/>
+            <material name="white"/>
         </visual>
         <collision>
-            <origin xyz="0 0 ${mica_thickness/2}" rpy="0 0 0"/>
             <geometry>
-                <cylinder radius="${mica_circle_r}" length="${mica_thickness}"/>
+                <sphere radius="${caster_radius}"/>
             </geometry>
         </collision>
-        <xacro:inertial_cylinder mass="${mica_circle_mass}"
-                                 length="${mica_thickness}"
-                                 radius="${mica_circle_r}">
-            <origin xyz="0 0 ${mica_thickness/2}" rpy="0 0 0"/>
-        </xacro:inertial_cylinder>
+        <xacro:inertial_sphere mass="${caster_mass}" radius="${caster_radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
     </link>
+
+    <gazebo reference="rear_caster_wheel">
+        <mu1 value="0.0"/>
+        <mu2 value="0.0"/>
+        <material>Gazebo/White</material>
+    </gazebo>
 
     <!-- ======================== LASER FRAME (RPLidar) ======================== -->
     <!--
-        Cảm biến LiDAR RPLidar A1 gắn tại tâm tấm mica tròn.
-        Kích thước thực (từ lidar.png): H=55mm, body W=96.8mm → radius≈48mm.
-        Chiều cao tâm laser_frame từ đáy lidar_deck:
-            z = mica_thickness + lidar_height/2 = 0.003 + 0.0275 = 0.0305m ≈ 0.031m
-        Vị trí laser_frame tính từ mặt đất (chiều cao quét):
-            0.033 (base) + 0 (chassis) + 0.043 (deck2) + 0.033 (lidar_deck) + 0.031 = 0.140m
-        NOTE: Tích hợp trực tiếp vào file này để đảm bảo tọa độ chính xác.
-              Khi dùng file này, KHÔNG include lidar.xacro trong robot.urdf.xacro
-              (lidar.xacro dùng parent="chassis" với offset cũ không còn phù hợp).
+        Cảm biến LiDAR RPLidar A1 gắn lệch về phía sau (rear) trên nóc của chassis.
+        - xyz: đặt cách đuôi xe 8cm (0.080m) trên trục X để lui xuống dưới một chút
+        - z = chassis_height + lidar_height/2 = 0.085 + 0.0275 = 0.1125m
     -->
     <joint name="laser_joint" type="fixed">
-        <parent link="lidar_deck"/>
+        <parent link="chassis"/>
         <child link="laser_frame"/>
-        <origin xyz="0 0 ${mica_thickness + lidar_height/2}" rpy="0 0 3.14159"/>
+        <origin xyz="0.070 0 ${chassis_height + lidar_height/2}" rpy="0 0 3.14159"/>
     </joint>
 
     <link name="laser_frame">
