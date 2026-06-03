@@ -206,7 +206,11 @@ class RobotBridgeNode(Node):
         self._latest_map: dict | None = None
         self._latest_scan_points: list[list[float]] = []
 
-        # TF Listener
+        # Mode flag: TF Listener chỉ active khi mapping (AMCL không chạy)
+        self._mapping_mode: bool = False
+        self._last_amcl_time: float = 0.0  # epoch seconds khi nhận amcl_pose cuối cùng
+
+        # TF Listener (chỉ dùng khi AMCL không publish)
         self._tf_buffer = None
         self._tf_listener = None
         try:
@@ -222,8 +226,15 @@ class RobotBridgeNode(Node):
         self._loop = loop
         self._ws_send_queue = ws_queue
 
+    def set_mapping_mode(self, active: bool):
+        """Được gọi từ bên ngoài để bật/tắt chế độ mapping."""
+        self._mapping_mode = active
+        self.get_logger().info(f"[Bridge] Mapping mode {'ENABLED' if active else 'DISABLED'} — "
+                               f"TF pose update {'ON' if active else 'OFF (using AMCL)'}")
+
     def _amcl_callback(self, msg: PoseWithCovarianceStamped):
-        """Cập nhật pose global khi AMCL publish."""
+        """Cập nhật pose global khi AMCL publish — là nguồn dữ liệu chính trong navigation mode."""
+        import time
         global _pose
         p = msg.pose.pose
         _pose["x"] = round(p.position.x, 3)
@@ -232,10 +243,21 @@ class RobotBridgeNode(Node):
             p.orientation.x, p.orientation.y,
             p.orientation.z, p.orientation.w
         ), 4)
+        # Ghi nhận thời điểm nhận được dữ liệu AMCL cuối cùng
+        self._last_amcl_time = time.monotonic()
 
     def _tf_pose_callback(self):
+        """Chỉ cập nhật pose từ TF khi đang mapping hoặc AMCL im lặng quá 3 giây."""
+        import time
         if not self._tf_buffer:
             return
+
+        amcl_age = time.monotonic() - self._last_amcl_time
+
+        # Chỉ dùng TF nếu: đang mapping HOẶC AMCL không publish trong 3 giây
+        if not self._mapping_mode and amcl_age < 3.0:
+            return
+
         try:
             # Thử map -> base_link
             trans = self._tf_buffer.lookup_transform("map", "base_link", rclpy.time.Time())
@@ -881,6 +903,7 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
             return
         active_runtime_mode = "mapping"
         localization_status = "unknown"
+        node.set_mapping_mode(True)   # Bật TF listener thay AMCL
         ok = await mapping_manager.start(
             command_id=msg.get("command_id", ""),
             map_name=msg.get("map_name", "robot_map"),
@@ -896,6 +919,7 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
             })
         else:
             active_runtime_mode = "idle"
+            node.set_mapping_mode(False)
 
     async def _handle_save_mapping(msg: dict):
         nonlocal active_runtime_mode, localization_status
@@ -907,6 +931,7 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
         if ok:
             active_runtime_mode = "idle"
             localization_status = "unknown"
+            node.set_mapping_mode(False)   # Tắt TF, trả lại AMCL
             await send_queue.put({
                 "type": "command_result",
                 "command_id": msg.get("command_id", ""),
@@ -923,6 +948,7 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
             send_queue=send_queue,
         )
         active_runtime_mode = "idle"
+        node.set_mapping_mode(False)   # Tắt TF, trả lại AMCL
         await send_queue.put({
             "type": "command_result",
             "command_id": msg.get("command_id", ""),
