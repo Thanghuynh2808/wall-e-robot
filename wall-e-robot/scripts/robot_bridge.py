@@ -197,6 +197,18 @@ class RobotBridgeNode(Node):
         self._latest_map: dict | None = None
         self._latest_scan_points: list[list[float]] = []
 
+        # TF Listener
+        self._tf_buffer = None
+        self._tf_listener = None
+        try:
+            from tf2_ros import Buffer, TransformListener
+            self._tf_buffer = Buffer()
+            self._tf_listener = TransformListener(self._tf_buffer, self)
+            self.create_timer(0.2, self._tf_pose_callback)
+            self.get_logger().info("[Bridge] TF Listener started successfully")
+        except Exception as e:
+            self.get_logger().error(f"[Bridge] Failed to initialize tf2_ros listener: {e}")
+
     def set_async_context(self, loop: asyncio.AbstractEventLoop, ws_queue: asyncio.Queue):
         self._loop = loop
         self._ws_send_queue = ws_queue
@@ -211,6 +223,37 @@ class RobotBridgeNode(Node):
             p.orientation.x, p.orientation.y,
             p.orientation.z, p.orientation.w
         ), 4)
+
+    def _tf_pose_callback(self):
+        if not self._tf_buffer:
+            return
+        try:
+            # Thử map -> base_link
+            trans = self._tf_buffer.lookup_transform("map", "base_link", rclpy.time.Time())
+            global _pose
+            _pose["x"] = round(trans.transform.translation.x, 3)
+            _pose["y"] = round(trans.transform.translation.y, 3)
+            _pose["theta"] = round(_quat_to_yaw(
+                trans.transform.rotation.x,
+                trans.transform.rotation.y,
+                trans.transform.rotation.z,
+                trans.transform.rotation.w
+            ), 4)
+        except Exception:
+            # Fallback sang map -> base_footprint
+            try:
+                trans = self._tf_buffer.lookup_transform("map", "base_footprint", rclpy.time.Time())
+                global _pose
+                _pose["x"] = round(trans.transform.translation.x, 3)
+                _pose["y"] = round(trans.transform.translation.y, 3)
+                _pose["theta"] = round(_quat_to_yaw(
+                    trans.transform.rotation.x,
+                    trans.transform.rotation.y,
+                    trans.transform.rotation.z,
+                    trans.transform.rotation.w
+                ), 4)
+            except Exception:
+                pass
 
     def _map_callback(self, msg: OccupancyGrid):
         width = int(msg.info.width)
