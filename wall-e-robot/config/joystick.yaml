@@ -14,5 +14,5 @@ teleop_twist_joy_node:
     scale_angular_turbo:
       yaw: 1.0
 
-    enable_button: 10  # R1 button
-    enable_turbo_button: 9 # L1 button
+    enable_button: 5  # R1 button
+    enable_turbo_button: 4 # L1 button
