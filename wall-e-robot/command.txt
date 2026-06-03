@@ -45,10 +45,9 @@ source /opt/ros/humble/setup.bash
 ros2 run rplidar_ros rplidar_node --ros-args -p serial_port:=/dev/ttyUSB0 -p serial_baudrate:=115200 -p frame_id:=laser_frame
 
 ros2 run rplidar_ros rplidar_node --ros-args \
-  -p serial_port:=/dev/ttyUSB0 \
+  -p serial_port:=/dev/ttyUSB1 \
   -p serial_baudrate:=115200 \
-  -p frame_id:=laser_frame \
-  -p scan_frequency:=5.0
+  -p frame_id:=laser_frame
 
 ter2
 export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
@@ -106,6 +105,9 @@ python3 multi_waypoint_nav.py --waypoints "1.3059,0.1227,0.0 | 1.8084,0.9360,0.0
 
 blutooth:
 bluetoothctl pair 41:42:9B:57:F8:1B && bluetoothctl trust 41:42:9B:57:F8:1B && bluetoothctl connect 41:42:9B:57:F8:1B
+
+joystick: bluetoothctl connect C6:58:93:05:06:07
+
 
 ============
 for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do

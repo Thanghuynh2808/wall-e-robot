@@ -93,6 +93,15 @@ MAP_SAVE_CMD_TEMPLATE = os.getenv(
 MAP_OUTPUT_DIR = Path(os.getenv("MAP_OUTPUT_DIR", Path(__file__).resolve().parent / "generated_maps"))
 ROBOT_WS_TOKEN = os.getenv("ROBOT_WS_TOKEN", "")
 
+# ROS2 environment setup for subprocesses
+MAP_WORKSPACE_SETUP = Path(__file__).resolve().parents[2] / "install" / "setup.bash"
+ENV_SETUP = (
+    f"source /opt/ros/humble/setup.bash && "
+    f"export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp && "
+    f"export ROS_DOMAIN_ID=0 && "
+    f"source {MAP_WORKSPACE_SETUP}"
+)
+
 # Shared state giữa ROS thread và asyncio event loop
 _pose = {"x": 0.0, "y": 0.0, "theta": 0.0}
 _nav_status   = "idle"
@@ -475,13 +484,13 @@ class MappingProcessManager:
         )
 
     async def _launch(self, command: str) -> asyncio.subprocess.Process:
-        logger.info("[Mapping] Launching: %s", command)
+        log_name = "slam_launch.log" if "slam" in command else "joystick_launch.log"
+        full_command = f"{ENV_SETUP} && {command} > {log_name} 2>&1"
+        logger.info("[Mapping] Launching: %s", full_command)
         return await asyncio.create_subprocess_exec(
             "bash",
-            "-lc",
-            command,
-            stdout=asyncio.subprocess.DEVNULL,
-            stderr=asyncio.subprocess.STDOUT,
+            "-c",
+            full_command,
         )
 
     async def _stop_processes(self):
@@ -505,21 +514,31 @@ class MappingProcessManager:
         self._stream_task = None
 
     async def _emit_mapping_stream(self, send_queue: asyncio.Queue, command_id: str):
+        logger.info("[Mapping] Stream loop started for command %s", command_id)
         while True:
-            latest_map = self._node.get_latest_map()
-            if latest_map:
-                await send_queue.put({
-                    "type": "live_map_update",
-                    "command_id": command_id,
-                    **latest_map,
-                })
-            points = self._node.get_latest_scan_points()
-            if points:
-                await send_queue.put({
-                    "type": "lidar_scan",
-                    "command_id": command_id,
-                    "points": points,
-                })
+            try:
+                latest_map = self._node.get_latest_map()
+                if latest_map:
+                    logger.info("[Mapping] Queueing live_map_update (size=%d)", len(latest_map.get("image_base64", "")))
+                    await send_queue.put({
+                        "type": "live_map_update",
+                        "command_id": command_id,
+                        **latest_map,
+                    })
+                else:
+                    logger.warning("[Mapping] No map received from node yet")
+                points = self._node.get_latest_scan_points()
+                if points:
+                    logger.info("[Mapping] Queueing lidar_scan (points=%d)", len(points))
+                    await send_queue.put({
+                        "type": "lidar_scan",
+                        "command_id": command_id,
+                        "points": points,
+                    })
+                else:
+                    logger.warning("[Mapping] No scan points received from node yet")
+            except Exception as e:
+                logger.exception("[Mapping] Error in stream loop: %s", e)
             await asyncio.sleep(1.0)
 
     async def start(self, *, command_id: str, map_name: str, send_queue: asyncio.Queue):
@@ -598,10 +617,11 @@ class MappingProcessManager:
             "map_name": map_name,
         })
 
+        full_save_cmd = f"{ENV_SETUP} && {save_cmd}"
         proc = await asyncio.create_subprocess_exec(
             "bash",
-            "-lc",
-            save_cmd,
+            "-c",
+            full_save_cmd,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.STDOUT,
         )
@@ -990,13 +1010,16 @@ async def _run_bridge(backend_ws_url: str, robot_id: str, node: RobotBridgeNode)
 
                 async def _sender():
                     """Drains send_queue và gửi lên WebSocket."""
+                    logger.info("[Bridge] Sender loop started")
                     while True:
                         msg = await send_queue.get()
+                        msg_type = msg.get("type", "unknown")
                         try:
+                            logger.info(f"[Bridge] → SENDING: {msg_type}")
                             await ws.send(json.dumps(msg))
-                        except Exception:
-                            # Nếu WS đóng, msg sẽ bị mất — reconnect sẽ xử lý
-                            pass
+                            logger.info(f"[Bridge] → SENT: {msg_type}")
+                        except Exception as e:
+                            logger.error(f"[Bridge] → SEND FAILED for {msg_type}: {e}")
 
                 send_task = asyncio.create_task(_sender())
 

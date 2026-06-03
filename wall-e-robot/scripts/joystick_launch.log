@@ -1,0 +1,12 @@
+[INFO] [launch]: All log files can be found below /home/wall-e/.ros/log/2026-06-03-20-46-07-951329-walle-desktop-19840
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [joy_node-1]: process started with pid [19849]
+[INFO] [teleop_node-2]: process started with pid [19851]
+[teleop_node-2] [INFO] [1780494368.469918828] [TeleopTwistJoy]: Teleop enable button 5.
+[teleop_node-2] [INFO] [1780494368.470367113] [TeleopTwistJoy]: Turbo on button 4.
+[teleop_node-2] [INFO] [1780494368.470466278] [TeleopTwistJoy]: Linear axis x on 1 at scale 0.500000.
+[teleop_node-2] [INFO] [1780494368.470566319] [TeleopTwistJoy]: Turbo for linear axis x is scale 1.000000.
+[teleop_node-2] [INFO] [1780494368.470656151] [TeleopTwistJoy]: Angular axis yaw on 0 at scale 0.500000.
+[teleop_node-2] [INFO] [1780494368.470741608] [TeleopTwistJoy]: Turbo for angular axis yaw is scale 1.000000.
+[joy_node-1] [INFO] [1780494369.319189300] [joy_node]: No haptic (rumble) available, skipping initialization
+[joy_node-1] [INFO] [1780494369.320296160] [joy_node]: Opened joystick: Wireless Controller.  deadzone: 0.050000

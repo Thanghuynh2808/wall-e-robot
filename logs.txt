@@ -1,0 +1,230 @@
+[component_container_isolated-1] [ERROR] [1780403972.017617964] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.018054081] [tf_help]: Data time: 1780403971s 596756962ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.117388011] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.117853591] [tf_help]: Data time: 1780403971s 596756962ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.217420020] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.217893768] [tf_help]: Data time: 1780403971s 596756962ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.317634935] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.318036921] [tf_help]: Data time: 1780403971s 596756962ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.417440280] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.417903526] [tf_help]: Data time: 1780403971s 596756962ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.517451868] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.517963539] [tf_help]: Data time: 1780403971s 596756962ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.617349395] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.617812058] [tf_help]: Data time: 1780403971s 596756962ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403972.706440859] [controller_server]: Passing new path to controller.
+[component_container_isolated-1] [ERROR] [1780403972.720021441] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.720428969] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.817441126] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.817888911] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403972.917591280] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403972.917939590] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.018747687] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.019192267] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.117708603] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.118107966] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.217680324] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.218077353] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.317600119] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.318001233] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.417630184] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.418055219] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [WARN] [1780403973.483093620] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[component_container_isolated-1] [WARN] [1780403973.489805194] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[component_container_isolated-1] [WARN] [1780403973.507310652] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[component_container_isolated-1] [ERROR] [1780403973.518488147] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.518880509] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.617352212] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.617807002] [tf_help]: Data time: 1780403972s 627604406ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403973.706441949] [controller_server]: Passing new path to controller.
+[component_container_isolated-1] [ERROR] [1780403973.719586796] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.719957862] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.817512693] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.817885218] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403973.917369478] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403973.917803555] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.017356477] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.017803685] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.117631373] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.118014986] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.217440682] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.217862802] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.317385059] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.317806887] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.417335561] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.417762348] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.517377080] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.517802409] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.617455064] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.617875434] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.717530131] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.717929205] [tf_help]: Data time: 1780403973s 657188157ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403974.806443090] [controller_server]: Passing new path to controller.
+[component_container_isolated-1] [ERROR] [1780403974.819834527] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.820217557] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403974.910919930] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403974.911137846] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.010873976] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.011107938] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.110581821] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.110837078] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.217837403] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.218285489] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.317453939] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.317916611] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.406870980] [controller_server]: Failed to make progress
+[component_container_isolated-1] [WARN] [1780403975.407610496] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[component_container_isolated-1] [INFO] [1780403975.425110640] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[component_container_isolated-1] [INFO] [1780403975.431045151] [controller_server]: Received a goal, begin computing control effort.
+[component_container_isolated-1] [ERROR] [1780403975.586347143] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.586569144] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [WARN] [1780403975.586634781] [controller_server]: Control loop missed its desired rate of 10.0000Hz
+[component_container_isolated-1] [ERROR] [1780403975.602520240] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.602936528] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.642795745] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.643221952] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.742697585] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.743103663] [tf_help]: Data time: 1780403974s 688591732ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403975.831681126] [controller_server]: Passing new path to controller.
+[component_container_isolated-1] [ERROR] [1780403975.836821861] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.837000103] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403975.942814576] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403975.943239032] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.042742327] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.043175246] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.142786857] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.143203439] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.242897899] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.243310397] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.342760392] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.343168806] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.444011202] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.444479127] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.542813860] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.543217023] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.635812955] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.636037583] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.735974466] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.738484462] [tf_help]: Data time: 1780403975s 729122861ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403976.831769155] [controller_server]: Passing new path to controller.
+[component_container_isolated-1] [ERROR] [1780403976.845070618] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.845471739] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403976.943069284] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403976.943450568] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [WARN] [1780403976.975656352] [BehaviorTreeEngine]: Behavior Tree tick rate 100.00 was exceeded!
+[component_container_isolated-1] [ERROR] [1780403977.042680542] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.043076706] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.142811731] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.143202061] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.242776345] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.243156755] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.342716453] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.343100656] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.442792797] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.443174667] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.536833621] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.539378347] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.635753271] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.636001530] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.735742389] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.735964976] [tf_help]: Data time: 1780403976s 758152225ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403977.831767242] [controller_server]: Passing new path to controller.
+[component_container_isolated-1] [ERROR] [1780403977.845309750] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.845678492] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403977.945422269] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403977.945805889] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.042832754] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.043253133] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.142757690] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.143157065] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.242822655] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.243220864] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.343925588] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.351921847] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.443094658] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.443557046] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.535975535] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.536188496] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+^C[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[component_container_isolated-1] [ERROR] [1780403978.642892603] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.643297813] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403978.643431132] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[component_container_isolated-1] [INFO] [1780403978.643847428] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[component_container_isolated-1] [INFO] [1780403978.644526570] [lifecycle_manager_navigation]: Terminating bond timer...
+[component_container_isolated-1] [ERROR] [1780403978.744890848] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.745375700] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.835786518] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.835969723] [tf_help]: Data time: 1780403977s 795976534ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [INFO] [1780403978.878592320] [velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)
+[component_container_isolated-1] [INFO] [1780403978.879425202] [velocity_smoother]: Deactivating
+[component_container_isolated-1] [INFO] [1780403978.879813784] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403978.890925112] [velocity_smoother]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403978.891420174] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403978.891521695] [waypoint_follower]: Running Nav2 LifecycleNode rcl preshutdown (waypoint_follower)
+[component_container_isolated-1] [INFO] [1780403978.891647138] [waypoint_follower]: Deactivating
+[component_container_isolated-1] [INFO] [1780403978.891727947] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403978.902699245] [waypoint_follower]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403978.924432674] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403978.924608878] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[component_container_isolated-1] [INFO] [1780403978.924744239] [bt_navigator]: Deactivating
+[component_container_isolated-1] [WARN] [1780403978.925425715] [bt_navigator]: [navigate_to_pose] [ActionServer] Requested to deactivate server but goal is still executing. Should check if action server is running before deactivating.
+[component_container_isolated-1] [INFO] [1780403978.931652645] [controller_server]: Passing new path to controller.
+[component_container_isolated-1] [ERROR] [1780403978.939278409] [tf_help]: Transform data too old when converting from map to odom
+[component_container_isolated-1] [ERROR] [1780403978.940061990] [tf_help]: Data time: 1780403978s 838527008ns, Transform time: 1780403946s 139540077ns
+[component_container_isolated-1] [ERROR] [1780403978.960157076] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[component_container_isolated-1] [WARN] [1780403978.963913946] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[component_container_isolated-1] [INFO] [1780403978.966070690] [bt_navigator]: Goal canceled
+[component_container_isolated-1] [WARN] [1780403978.966311073] [bt_navigator]: [navigate_to_pose] [ActionServer] Stopping the thread per request.
+[component_container_isolated-1] [INFO] [1780403978.967599052] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403978.978300794] [bt_navigator]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.031681008] [controller_server]: Goal was canceled. Stopping the robot.
+[component_container_isolated-1] [INFO] [1780403979.031897471] [controller_server]: [follow_path] [ActionServer] Client requested to cancel the goal. Cancelling.
+[component_container_isolated-1] [INFO] [1780403979.319504184] [bt_navigator]: Completed Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.319792704] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.319874972] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[component_container_isolated-1] [INFO] [1780403979.320004500] [behavior_server]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.320196458] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.330861502] [behavior_server]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.360058951] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.360425071] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[component_container_isolated-1] [INFO] [1780403979.360770187] [planner_server]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.361427162] [global_costmap.global_costmap]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.364526787] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[component_container_isolated-1] [INFO] [1780403979.364953587] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.376110488] [planner_server]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.423795414] [global_costmap.global_costmap]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.455620469] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[component_container_isolated-1] [INFO] [1780403979.457979977] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[component_container_isolated-1] [INFO] [1780403979.504616427] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.504958334] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[component_container_isolated-1] [INFO] [1780403979.505163128] [lifecycle_manager_localization]: Terminating bond timer...
+[component_container_isolated-1] [INFO] [1780403979.547020759] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[component_container_isolated-1] [INFO] [1780403979.547633683] [smoother_server]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.548034811] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.558930321] [smoother_server]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.593908389] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.594337523] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)
+[component_container_isolated-1] [INFO] [1780403979.594705685] [amcl]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.595073264] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.605905470] [amcl]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.629277957] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.629457079] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[component_container_isolated-1] [INFO] [1780403979.629708258] [controller_server]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.629807446] [controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[component_container_isolated-1] [INFO] [1780403979.629970522] [local_costmap.local_costmap]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.771217454] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.782183271] [controller_server]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.782369978] [controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[component_container_isolated-1] [INFO] [1780403979.782604529] [local_costmap.local_costmap]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.845962910] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.846630387] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[component_container_isolated-1] [INFO] [1780403979.847014011] [map_server]: Deactivating
+[component_container_isolated-1] [INFO] [1780403979.847373130] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[component_container_isolated-1] [INFO] [1780403979.858339531] [map_server]: Cleaning up
+[component_container_isolated-1] [INFO] [1780403979.858901986] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[ERROR] [component_container_isolated-1]: process[component_container_isolated-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [component_container_isolated-1]: sending signal 'SIGTERM' to process[component_container_isolated-1]
+[component_container_isolated-1] [INFO] [1780403984.256735289] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [component_container_isolated-1]: process[component_container_isolated-1] failed to terminate '10.0' seconds after receiving 'SIGTERM', escalating to 'SIGKILL'
+[INFO] [component_container_isolated-1]: sending signal 'SIGKILL' to process[component_container_isolated-1]
+[ERROR] [component_container_isolated-1]: process has died [pid 2932, exit code -9, cmd '/opt/ros/humble/lib/rclcpp_components/component_container_isolated --ros-args --log-level info --ros-args -r __node:=nav2_container --params-file /tmp/launch_params_be4p4183 --params-file /tmp/launch_params_fmnvbkju -r /cmd_vel:=/diff_drive_controller/cmd_vel_unstamped -r /tf:=tf -r /tf_static:=tf_static']
