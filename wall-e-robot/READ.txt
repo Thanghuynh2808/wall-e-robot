@@ -1,0 +1,82 @@
+colcon build --base-paths wall-e-robot wall-e-robot/diffdrive_arduino
+colcon build --packages-select wall-e-robot --symlink-install
+
+
+rm -rf build/ install/ && colcon build --base-paths wall-e-robot wall-e-robot/diffdrive_arduino --symlink-install
+
+source install/setup.bash
+ros2 launch wall-e-robot launch_robot.launch.py
+
+
+Chạy trên orrange
+export ROS_DOMAIN_ID=0
+source install/setup.bash
+ros2 launch wall-e-robot launch_robot.launch.py
+
+Chạy trên Ubuntu
+export ROS_DOMAIN_ID=0
+source /opt/ros/humble/setup.bash
+ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args -p speed:=0.2 -p turn:=0.5
+
+
+Khởi động ====RVIZ====
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export ROS_DOMAIN_ID=0
+rviz2 -d config/nav2.rviz
+
+kểm tra các thông số
+ros2 topic echo /diff_drive_controller/odom --once | grep -A 5 "orientation:"
+ros2 topic echo /diff_drive_controller/odom --once | grep -A 3 "position:"
+
+
+
+lidar - rrange
+
+
+ter1
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export ROS_DOMAIN_ID=0
+source /opt/ros/humble/setup.bash
+ros2 run rplidar_ros rplidar_node --ros-args -p serial_port:=/dev/ttyUSB0 -p serial_baudrate:=115200 -p frame_id:=laser_frame
+
+
+ter2
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export ROS_DOMAIN_ID=0
+source install/setup.bash
+ros2 launch wall-e-robot launch_robot.launch.py
+
+ter 3 (only map)
+c
+ros2 launch wall-e-robot slam.launch.py use_sim_time:=false
+
+ter 4
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+export ROS_DOMAIN_ID=0
+source install/setup.bash
+ros2 launch wall-e-robot nav_bringup.launch.py
+
+muốn chạy navigation thông thường -> chạy ter1 ter2
+muốn lấy bản đồ -> ter1 và ter 3 , sau đó chạy trên Ubuntu để điều khiển xe bằng bàn phím để lấy bản đồ, đồng thời bật rviz lne để quan sát
+
+
+
+save map
+ros2 service call /slam_toolbox/save_map slam_toolbox_msgs/srv/SaveMap "{name: {data: 'my_map2'}}"
+ros2 run nav2_map_server map_saver_cli -f my_map2
+
+
+sudo apt update
+sudo apt install ros-humble-nav2-map-server
+
+
+
+cài dds
+sudo apt install ros-humble-rmw-cyclonedds-cpp
+sudo apt install ros-humble-row-cyclonedds-cpp
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+
+
+chạy navi với nhiều vị trí khác nhau
+python3 multi_waypoint_nav.py --waypoints "1.3059,0.1227,0.0 | 1.8084,0.9360,0.0" --delay 5.0
+
